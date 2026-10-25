@@ -1,0 +1,33 @@
+# Secrets
+.env
+.env.*
+!.env.example
+gmail_oauth.json
+*.pem
+*.key
+
+# Runtime data
+data.json
+data.bak
+*.tmp
+ssh_audit.log
+telegram_user.*
+docs_index.json
+docs/
+workspace/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

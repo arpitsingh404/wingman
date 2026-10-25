@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wingman — Personal AI Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=15">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand__logo">W</div>
+      <div>
+        <div class="brand__name">WINGMAN</div>
+        <div class="brand__tag">personal AI assistant</div>
+      </div>
+    </div>
+
+    <button class="newChat" id="newChatBtn">＋ New chat</button>
+
+    <div class="chatList" id="chatList"></div>
+
+    <div class="sidebar__foot">
+      <div class="settingsCard__row">
+        <span class="settingsCard__label">PROVIDER</span>
+        <select id="providerSel"></select>
+      </div>
+      <div class="settingsCard__row">
+        <span class="settingsCard__label">MODEL</span>
+        <select id="modelSel"></select>
+      </div>
+      <div class="keyRow">
+        <span class="keyHint" id="keyHint">…</span>
+        <button class="btnSmall" id="settingsBtn">⚙ SETTINGS</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+    <header class="topbar">
+      <button class="iconBtn menuBtn" id="menuBtn" title="Chats">☰</button>
+      <div class="topbar__title" id="chatTitle">New chat</div>
+      <div class="topbar__spacer"></div>
+      <span class="modelBadge" id="modelBadge">…</span>
+      <button class="iconBtn panelBtn" id="panelBtn" title="Tasks & Notes">▤</button>
+      <button class="iconBtn" id="clearChatBtn" title="Clear chat messages">🧹</button>
+      <button class="iconBtn" id="clearBtn" title="Delete this chat">🗑</button>
+    </header>
+
+    <div class="messages" id="messages">
+      <div class="empty" id="emptyState">
+        <div class="empty__logo">W</div>
+        <h2>Hi, main Wingman hoon 👋</h2>
+        <p>Tasks, reminders, notes — sab kuch chat se. Hinglish me baat karo.</p>
+        <div class="suggestions">
+          <button class="sugg" data-text="Kal shaam 5 baje meeting ka reminder lagao">Kal 5 baje meeting ka reminder</button>
+          <button class="sugg" data-text="Mera ek note save karo: project ideas — AI chatroom, wingman app">Ek note save karo</button>
+          <button class="sugg" data-text="Mere pending tasks batao">Mere pending tasks batao</button>
+          <button class="sugg" data-text="Aaj ka date aur time batao">Aaj ka date/time batao</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="composer">
+      <div class="composer__box">
+        <button class="micBtn" id="micBtn" title="Voice input">🎤</button>
+        <textarea id="input" rows="1" placeholder="Wingman se kuch bhi poocho…  (Shift+Enter = new line)"></textarea>
+        <button class="sendBtn" id="sendBtn" title="Send">➤</button>
+      </div>
+      <div class="hint">Tasks/notes AI khud manage karta hai · voice input supported</div>
+    </div>
+  </main>
+
+  <!-- ============ RIGHT PANEL ============ -->
+  <aside class="panel" id="panel">
+    <div class="tabs">
+      <button class="tab is-active" data-tab="tasks" id="tabTasks">Tasks</button>
+      <button class="tab" data-tab="notes" id="tabNotes">Notes</button>
+      <button class="tab" data-tab="runs" id="tabRuns">Runs</button>
+      <button class="tab" data-tab="files" id="tabFiles">Files</button>
+    </div>
+
+    <div class="pane" id="tasksPane">
+      <form class="pane__form" id="taskForm">
+        <input id="taskInput" placeholder="Naya task…" autocomplete="off">
+        <button type="submit">Add</button>
+      </form>
+      <div class="list" id="taskList"></div>
+    </div>
+
+    <div class="pane" id="notesPane" hidden>
+      <form class="pane__form pane__form--note" id="noteForm">
+        <input id="noteTitle" placeholder="Title" autocomplete="off">
+        <textarea id="noteContent" placeholder="Note…" rows="2"></textarea>
+        <button type="submit">Save</button>
+      </form>
+      <div class="list" id="noteList"></div>
+    </div>
+
+    <div class="pane" id="runsPane" hidden>
+      <form class="pane__form" id="runForm">
+        <input id="runGoal" placeholder="Goal… e.g. VPS pe nginx setup karo" autocomplete="off">
+        <button type="submit">Run</button>
+      </form>
+      <div class="list" id="runList"></div>
+    </div>
+
+    <div class="pane" id="filesPane" hidden>
+      <div class="pane__form pane__form--note">
+        <input id="docFile" type="file" accept=".pdf,.txt,.md,.csv,.json,.py,.html,.log">
+        <button id="docUploadBtn" type="button">Upload</button>
+      </div>
+      <div class="list" id="docList"></div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- ============ SETTINGS MODAL ============ -->
+<div class="modal" id="settingsModal" hidden>
+  <div class="modal__card">
+    <div class="modal__head">
+      <h3>⚙ SETTINGS</h3>
+      <button class="iconBtn" id="modalClose">✕</button>
+    </div>
+
+    <div class="modal__body">
+      <h4>GMAIL (EMAIL TOOL)</h4>
+      <div class="gmailStatus is-off" id="gmailStatus">…</div>
+
+      <div class="oauthBox">
+        <div class="oauthBox__title">Connect with Google <span class="tagNew">RECOMMENDED</span></div>
+        <p class="modal__note">Google Cloud Console → <b>APIs &amp; Services → Credentials</b> → Create OAuth client ID → <b>Desktop app</b>.<br>Redirect URI: <code>http://127.0.0.1:8200/oauth/callback</code></p>
+        <label>OAuth Client ID</label>
+        <input id="gmailClientId" placeholder="xxxxx.apps.googleusercontent.com" autocomplete="off">
+        <label>OAuth Client Secret</label>
+        <input id="gmailClientSecret" type="password" placeholder="GOCSPX-…" autocomplete="off">
+        <button class="btnPrimary oauthBtn" id="connectGmail">🔗 CONNECT GMAIL</button>
+        <button class="btnGhost" id="disconnectGmail">Disconnect</button>
+      </div>
+
+      <details class="advanced">
+        <summary>Advanced: App Password (SMTP)</summary>
+        <label>Gmail address</label>
+        <input id="gmailUser" placeholder="you@gmail.com" autocomplete="off">
+        <label>App password</label>
+        <input id="gmailPass" type="password" placeholder="16-character app password" autocomplete="off">
+      </details>
+
+      <h4>TELEGRAM BOT (OPTIONAL)</h4>
+      <p class="modal__note">BotFather (<b>@BotFather</b>) → <b>/newbot</b> → token yahan daalo → SAVE. Phir Telegram pe bot ko <b>/start</b> bhejo — auto connect ho jayega. <b>Khali chhodo to Telegram off.</b></p>
+      <label>Bot token</label>
+      <input id="tgToken" type="password" placeholder="123456789:ABCdef…" autocomplete="off">
+      <div class="modal__status" id="tgStatus"></div>
+      <div class="gmailStatus is-off" id="tgOwnerStatus">Not connected</div>
+
+      <label class="switchRow">
+        <span>Enable Telegram bot<br><small>messages pe AI reply</small></span>
+        <input type="checkbox" id="tgEnabled">
+      </label>
+
+      <h4>SSH / VPS (ADVANCED)</h4>
+      <p class="modal__note">Remote server manage karne ke liye. <b>SSH key recommended</b> — password locally save hota hai. Destructive commands blocked hain.</p>
+      <label>Host / IP</label>
+      <input id="sshHost" placeholder="203.0.113.10" autocomplete="off">
+      <div class="sshRow">
+        <div><label>Port</label><input id="sshPort" placeholder="22" autocomplete="off"></div>
+        <div><label>User</label><input id="sshUser" placeholder="root" autocomplete="off"></div>
+      </div>
+      <label>Auth method</label>
+      <select id="sshAuth">
+        <option value="password">Password</option>
+        <option value="key">SSH Key</option>
+      </select>
+      <div id="sshPassWrap">
+        <label>SSH password</label>
+        <input id="sshPass" type="password" placeholder="(stored in wingman/.env)" autocomplete="off">
+      </div>
+      <div id="sshKeyWrap" hidden>
+        <label>Private key path</label>
+        <input id="sshKeyPath" placeholder="C:\Users\you\.ssh\id_ed25519" autocomplete="off">
+      </div>
+      <button class="btnPrimary" id="saveSsh">SAVE SSH + TEST</button>
+      <div class="gmailStatus is-off" id="sshStatus">Not configured</div>
+
+      <label class="switchRow">
+        <span>Allow SSH commands<br><small>ssh_exec tool</small></span>
+        <input type="checkbox" id="allowSsh">
+      </label>
+      <label class="switchRow">
+        <span>Allow risky tools on Telegram<br><small>SSH/shell bot se chalenge</small></span>
+        <input type="checkbox" id="telegramRisky">
+      </label>
+
+      <h4>PERMISSIONS (APPROVAL GATES)</h4>
+      <label class="switchRow">
+        <span>Allow risky tools<br><small>write_file · run_python</small></span>
+        <input type="checkbox" id="allowRisky">
+      </label>
+      <label class="switchRow">
+        <span>Allow sending emails<br><small>send_email</small></span>
+        <input type="checkbox" id="allowEmail">
+      </label>
+
+      <h4>WORKSPACE SANDBOX</h4>
+      <p class="modal__note" id="workspacePath">…</p>
+
+      <h4>DATA</h4>
+      <button class="btnGhost" id="clearAllChats">🧹 Clear all chats</button>
+      <button class="btnGhost btnDanger" id="resetAll">⚠ Reset everything (chats + tasks + notes)</button>
+      <p class="modal__note">Ye actions undo nahi honge.</p>
+    </div>
+
+    <div class="modal__foot">
+      <button class="btnPrimary" id="saveSettings">SAVE SETTINGS</button>
+    </div>
+  </div>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+<div class="toast" id="toast"></div>
+
+<script src="app.js?v=17"></script>
+</body>
+</html>

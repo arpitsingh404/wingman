@@ -1,0 +1,4 @@
+# Wingman backend dependencies
+# (the HTTP server itself is pure Python stdlib)
+paramiko>=3.4
+pypdf>=5.0
