@@ -5,6 +5,7 @@
 > a Telegram bot with the same powers.
 
 [![Python](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](#requirements)
+[![Version](https://img.shields.io/badge/version-1.2.0-ff2d87)](https://github.com/arpitsingh404/wingman)
 [![License](https://img.shields.io/badge/license-MIT-ff2d87)](LICENSE)
 [![Backend](https://img.shields.io/badge/backend-Python%20stdlib-2ea44f)](#architecture)
 [![Local-first](https://img.shields.io/badge/local--first-127.0.0.1-ff2d87)](#security-notes)
@@ -289,3 +290,6 @@ wingman/
 ## License
 
 [MIT](LICENSE) © 2026 Arpit Singh
+
+- GitHub: [@arpitsingh404](https://github.com/arpitsingh404)
+- Repository: [wingman](https://github.com/arpitsingh404/wingman)
